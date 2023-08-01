@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, request
 from flask import jsonify
 app = Flask(__name__)
 
@@ -48,6 +48,22 @@ def change100route(dollar, cents):
     result = change(amount100)
     return jsonify(result)
 
+@app.route('/example', methods=['POST'])
+def example():
+    if request.method == 'POST':
+        # Do something here
+        print(request)
+        data = request.get_json()
+        print(type(data))
+        dollar = data['dollar']
+        cents = data['cents']
+        print(f"Make Change for {dollar}.{cents}")
+        #amount = f"{dollar}.{cents}"
+        amount = f"{data['dollar']}.{data['cents']}"
+        result = change(float(amount))
+        print(result)
+        print(jsonify(result).get_json())
+        return jsonify(result)
 
 if __name__ == '__main__':
     app.run(host='127.0.0.1', port=8080, debug=True)
